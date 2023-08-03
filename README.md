@@ -1,0 +1,2 @@
+# Mancala
+Recursionチーム開発
