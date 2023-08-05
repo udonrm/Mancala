@@ -1,12 +1,8 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
 let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 
-//選択された場所
-// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
-//let  = document.getElementByClassName("hole your");
-
-//選択された場所の石の数
-let selectedNumberOfStone = table[index];
+// //選択された場所の石の数
+// let selectedNumberOfStone = table[index];
 
 //種まきを行う関数
 //普遍的な増減処理
@@ -30,11 +26,6 @@ function seeding(index) {
   return table;
 }
 
-let clicked = document.getElementByClassName("hole your");
-for(let i = 0; i <= 5; i++){
-  clicked[i].addEventListener('click',seeding(i));
-}
-
 //innerHTML
 const holes = document.getElementById("holes");
 holes.innerHTML = `
@@ -45,40 +36,40 @@ holes.innerHTML = `
 <div class="field">
   <div class="table your">
     <div class="hole your" id="0">
-      <button class="btn">
+      <button type="button" class="btn">
         <p>${table[0]}</p>
         <img src="images/${table[0]}.png" width="40" height="40">
       </button>
       </div>
     <div class="hole your" id="1">
-    <button class="btn">
+    <button type="button" class="btn">
       <p>${table[1]}</p>
       <img src="images/${table[1]}.png" width="40" height="40">
     </button>
     </div>
     <div class="hole your" id="2">
-    <button class="btn">
-      <p>${table[2]}</p>
-      <img src="images/${table[2]}.png" width="40" height="40">
-    </button>
+      <button type="button" class="btn">
+        <p>${table[2]}</p>
+        <img src="images/${table[2]}.png" width="40" height="40">
+      </button>
     </div>
     <div class="hole your" id="3">
-    <button class="btn">
-      <p>${table[3]}</p>
-      <img src="images/${table[3]}.png" width="40" height="40">
-    </button>
+      <button type="button" class="btn">
+        <p>${table[3]}</p>
+        <img src="images/${table[3]}.png" width="40" height="40">
+      </button>
     </div>
     <div class="hole your" id="4">
-    <button class="btn">
-      <p>${table[4]}</p>
-      <img src="images/${table[4]}.png" width="40" height="40">
-    </button>
+      <button type="button" class="btn">
+        <p>${table[4]}</p>
+        <img src="images/${table[4]}.png" width="40" height="40">
+      </button>
     </div>
     <div class="hole your" id="5">
-    <button class="btn">
-      <p>${table[5]}</p>
-      <img src="images/${table[5]}.png" width="40" height="40">
-    </button>
+      <button type="button" class="btn">
+        <p>${table[5]}</p>
+        <img src="images/${table[5]}.png" width="40" height="40">
+      </button>
     </div>
   </div>
   <div class="table com">
@@ -109,68 +100,74 @@ holes.innerHTML = `
 </div>
 `;
 
-
-//各マスの変数の定義(初期値設定)
-
-//コンピュータが選択できるマスの条件
-//ランダム関数で受け取った値を使う
-//tableインデックスの7~12のうち空でない場所
-//相手が選択したマスによって配列を更新する
-function canSelectIndexByCom() {
-  let canSelect = false;
-  let indexSelectedByCom;
-  while (canSelect == false) {
-    //コンピュータが選択したマス
-    indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
-    if (table[indexSelectedByCom] !== null) {
-      canSelect = true;
-    }
-  }
-  //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
-  return indexSelectedByCom;
+//選択された場所
+// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
+let button = document.getElementsByClassName("btn");
+for (let j = 0; j <= 5; j++) {
+  button[j].addEventListener("click", function() {
+    seeding(j);
+  });
 }
 
 
-//普遍的な増減処理
+// //各マスの変数の定義(初期値設定)
 
-function seeding(index) {
+// //コンピュータが選択できるマスの条件
+// //ランダム関数で受け取った値を使う
+// //tableインデックスの7~12のうち空でない場所
+// //相手が選択したマスによって配列を更新する
+// function canSelectIndexByCom() {
+//   let canSelect = false;
+//   let indexSelectedByCom;
+//   while (canSelect == false) {
+//     //コンピュータが選択したマス
+//     indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
+//     if (table[indexSelectedByCom] !== null) {
+//       canSelect = true;
+//     }
+//   }
+//   //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
+//   return indexSelectedByCom;
+// }
 
-  //連続操作処理（条件；種まきの最後がストアに入る）
-  if (i !== 13) { // 13は自分のストアのインデックス
-    if (table[i] === 1) {
-      // ストアに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
-      captureOpponentStones(i);
-    }
-    // 自分のターンが続く場合はターンを続ける
-    // (ここに処理を追加)
-  } else {
-    // 自分のターンが終わる場合、相手のターンを呼び出す
-    computerTurn();
-  }
+// //普遍的な増減処理
 
-}
+// function seeding(index) {
+//   //連続操作処理（条件；種まきの最後がストアに入る）
+//   if (i !== 13) {
+//     // 13は自分のストアのインデックス
+//     if (table[i] === 1) {
+//       // ストアに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
+//       captureOpponentStones(i);
+//     }
+//     // 自分のターンが続く場合はターンを続ける
+//     // (ここに処理を追加)
+//   } else {
+//     // 自分のターンが終わる場合、相手のターンを呼び出す
+//     computerTurn();
+//   }
+// }
 
-//対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-function captureOpponentStones(index){
-  // (ここに対面の相手マスを奪う処理を追加)
-}
+// //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
+// function captureOpponentStones(index) {
+//   // (ここに対面の相手マスを奪う処理を追加)
+// }
 
-//相手の操作をランダム関数で定義
-function computerTurn(){
-  let indexSelectedByCom = canSelectIndexByCom();
-  table = seeding(indexSelectedByCom);
-}
+// //相手の操作をランダム関数で定義
+// function computerTurn() {
+//   let indexSelectedByCom = canSelectIndexByCom();
+//   table = seeding(indexSelectedByCom);
+// }
 
-//自分のターンを表示
-function displayPlayerTurn() {
-  // (ここに自分のターンを表示する処理を追加)
-}
+// //自分のターンを表示
+// function displayPlayerTurn() {
+//   // (ここに自分のターンを表示する処理を追加)
+// }
 
+// // ボタンクリック後、sleep関数で処理を待たせる
 
-//ボタンクリック後、sleep関数で処理を待たせる
+// // 試合終了処理（どちらかのプレーヤーのマスが全て空）
 
-//試合終了処理（どちらかのプレーヤーのマスが全て空）
+// // 勝者判定
 
-//勝者判定
-
-//勝者表示
+// // 勝者表示
