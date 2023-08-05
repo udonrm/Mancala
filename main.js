@@ -11,6 +11,7 @@ let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 let selectedNumberOfStone = table[index];
 
 //種まきを行う関数
+//普遍的な増減処理
 //敵と自分の操作を区別しない
 //連続操作条件が起こらない時にターン終了(while文)
 function seeding(index) {
@@ -39,15 +40,18 @@ function seeding(index) {
 //相手が選択したマスによって配列を更新する
 function canSelectIndexByCom() {
   let canSelect = false;
+  let indexSelectedByCom;
   while (canSelect == false) {
     //コンピュータが選択したマス
-    let indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
-    if (table[i] !== null) {
+    indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
+    if (table[indexSelectedByCom] !== null) {
       canSelect = true;
     }
   }
+  //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
   return indexSelectedByCom;
 }
+
 
 //普遍的な増減処理
 
