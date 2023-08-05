@@ -16,7 +16,7 @@ let selectedNumberOfStone = table[index];
 function seeding(index) {
   //自分のターン
   //スタート地点の石の数を0にする
-  selectedNumberOfStone = 0;
+  let selectedNumberOfStone = 0; //初期値を０
   let n = 0;
   for (let i = index; i <= table[index] + index; i++) {
     //石の移動の増減処理
@@ -51,13 +51,39 @@ function canSelectIndexByCom() {
 
 //普遍的な増減処理
 
-//連続操作処理(条件；種まきの最後がストアに入る)
+function seeding(index) {
+
+  //連続操作処理（条件；種まきの最後がストアに入る）
+  if (i !== 13) { // 13は自分のストアのインデックス
+    if (table[i] === 1) {
+      // ストアに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
+      captureOpponentStones(i);
+    }
+    // 自分のターンが続く場合はターンを続ける
+    // (ここに処理を追加)
+  } else {
+    // 自分のターンが終わる場合、相手のターンを呼び出す
+    computerTurn();
+  }
+
+}
 
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
+function captureOpponentStones(index){
+  // (ここに対面の相手マスを奪う処理を追加)
+}
 
 //相手の操作をランダム関数で定義
+function computerTurn(){
+  let indexSelectedByCom = canSelectIndexByCom();
+  table = seeding(indexSelectedByCom);
+}
 
 //自分のターンを表示
+function displayPlayerTurn() {
+  // (ここに自分のターンを表示する処理を追加)
+}
+
 
 //ボタンクリック後、sleep関数で処理を待たせる
 
