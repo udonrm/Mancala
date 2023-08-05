@@ -1,11 +1,9 @@
-//innerHTML
-//各マスの変数の表示
-//各マスの変数に依存した画像表示
 //0~6は自分のコマとストア,以降は敵のコマとストア
 let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 
 //選択された場所
-// let index = HTML側でクリックした場所のインデックスの値を返す
+// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
+//let  = document.getElementByClassName("hole your");
 
 //選択された場所の石の数
 let selectedNumberOfStone = table[index];
@@ -31,6 +29,86 @@ function seeding(index) {
   //更新した配列を返す
   return table;
 }
+
+let clicked = document.getElementByClassName("hole your");
+for(let i = 0; i <= 5; i++){
+  clicked[i].addEventListener('click',seeding(i));
+}
+
+//innerHTML
+const holes = document.getElementById("holes");
+holes.innerHTML = `
+<div class="store com" id="13">
+  <p>${table[13]}</p>
+  <img src="images/${table[13]}.png" width="40" height="40">
+</div>
+<div class="field">
+  <div class="table your">
+    <div class="hole your" id="0">
+      <button class="btn">
+        <p>${table[0]}</p>
+        <img src="images/${table[0]}.png" width="40" height="40">
+      </button>
+      </div>
+    <div class="hole your" id="1">
+    <button class="btn">
+      <p>${table[1]}</p>
+      <img src="images/${table[1]}.png" width="40" height="40">
+    </button>
+    </div>
+    <div class="hole your" id="2">
+    <button class="btn">
+      <p>${table[2]}</p>
+      <img src="images/${table[2]}.png" width="40" height="40">
+    </button>
+    </div>
+    <div class="hole your" id="3">
+    <button class="btn">
+      <p>${table[3]}</p>
+      <img src="images/${table[3]}.png" width="40" height="40">
+    </button>
+    </div>
+    <div class="hole your" id="4">
+    <button class="btn">
+      <p>${table[4]}</p>
+      <img src="images/${table[4]}.png" width="40" height="40">
+    </button>
+    </div>
+    <div class="hole your" id="5">
+    <button class="btn">
+      <p>${table[5]}</p>
+      <img src="images/${table[5]}.png" width="40" height="40">
+    </button>
+    </div>
+  </div>
+  <div class="table com">
+    <div class="hole com" id="7">
+      <p>${table[7]}</p>
+      <img src="images/${table[7]}.png" width="40" height="40"></div>
+    <div class="hole com" id="8">
+      <p>${table[8]}</p>
+      <img src="images/${table[8]}.png" width="40" height="40">
+    </div>
+    <div class="hole com" id="9">
+      <p>${table[9]}</p>
+      <img src="images/${table[9]}.png" width="40" height="40"></div>
+    <div class="hole com" id="10">
+      <p>${table[10]}</p>
+      <img src="images/${table[10]}.png" width="40" height="40"></div>
+    <div class="hole com" id="11">
+      <p>${table[11]}</p>
+      <img src="images/${table[11]}.png" width="40" height="40"></div>
+    <div class="hole com" id="12">
+      <p>${table[12]}</p>
+      <img src="images/${table[12]}.png" width="40" height="40"></div>
+  </div>
+</div>
+<div class="store your" id="6">
+  <p>${table[6]}</p>
+  <img src="images/${table[6]}.png" width="40" height="40">
+</div>
+`;
+
 
 //各マスの変数の定義(初期値設定)
 

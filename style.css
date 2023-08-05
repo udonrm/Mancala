@@ -14,6 +14,11 @@ body{
     border-radius:50px;
 }
 
+.field{
+    display:flex;
+    flex-direction:column-reverse;
+}
+
 .table.com{
     display:flex;
     flex-direction:row-reverse;
@@ -37,7 +42,7 @@ body{
     flex-direction:column;
 }
 
-.hole:hover, .store:hover{
+.hole.your:hover{
     filter: saturate(200%);
 }
 
