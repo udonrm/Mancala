@@ -1,8 +1,9 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
 let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 
+//クリックしたコマの場所
+
 // //選択された場所の石の数
-// let selectedNumberOfStone = table[index];
 
 //種まきを1度だけ行う関数
 //連続操作条件が発生するときにもう一度呼び出される
@@ -12,24 +13,27 @@ let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 function seeding(index) {
   //自分のターン
   //スタート地点の石の数を0にする
-  selectedNumberOfStone = 0; //初期値を０
-  let n = 0;
-  lastSeedingPlace;
-  for (let i = index; i <= table[index] + index; i++) {
+  // selectedNumberOfStone = 0; //初期値を０
+  let lastSeedingPlace = index;
+  let selectedNumberOfStone = table[index];
+  for (let i = index + 1; i <= selectedNumberOfStone + index; i++) {
     //石の移動の増減処理
     //スタート地点から次のインデックス番号の石の数を条件の回数だけ1ずつ増やす
-    n++;
-    table[index + n]++;
+    table[i]++;
+    table[index]--;
+    // console.log(table[i]);
     if (i > 13) {
       i %= 14;
     }
+    lastSeedingPlace++;
   }
   //最後の種を落とした場所
-  lastSeedingPlace = index + n;
-  //更新した配列を返す
-  return table;
-}
+  result = { lastSeedingPlace, table };
 
+  //更新した配列を返す
+  return result;
+}
+// console.log(seeding(3).lastSeedingPlace);
 
 //innerHTML
 const holes = document.getElementById("holes");
@@ -109,19 +113,22 @@ holes.innerHTML = `
 function canContinue(index) {
   let storePlace;
   //プレイヤーのマスの選択
-  if (0 <= index <= 5) storePlace == 6;
+  if (0 <= index <= 5) storePlace = 6;
   //相手のマスの選択
   else if (7 <= index <= 12) storePlace = 13;
 
   let canContinue = false;
   while (canContinue == true) {
-    if (lastSeedingPlace == storePlace) {
+    if (seeding().lastSeedingPlace == storePlace) {
       canContinue = true;
     }
   }
+  return storePlace;
 }
 
-if (lastSeedingPlace !== storePlace) {
+console.log(canContinue());
+
+if (seeding() !== canContinue()) {
   if (table[index] === 1) {
     // マスに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
     captureComStones();
@@ -166,12 +173,11 @@ function computerTurn() {
   table = seeding(indexSelectedByCom);
 }
 
-
 //選択された場所
 // let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
 let button = document.getElementsByClassName("btn");
 for (let j = 0; j <= 5; j++) {
-  button[j].addEventListener("click", function() {
+  button[j].addEventListener("click", function () {
     seeding(j);
   });
 }
@@ -245,4 +251,3 @@ for (let j = 0; j <= 5; j++) {
 //勝者判定
 
 //勝者表示
-
