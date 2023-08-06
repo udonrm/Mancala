@@ -16,6 +16,7 @@ function seeding(index) {
   // selectedNumberOfStone = 0; //初期値を０
   let lastSeedingPlace = index;
   let selectedNumberOfStone = table[index];
+  let canContinue = true;
   for (let i = index + 1; i <= selectedNumberOfStone + index; i++) {
     //石の移動の増減処理
     //スタート地点から次のインデックス番号の石の数を条件の回数だけ1ずつ増やす
@@ -27,6 +28,9 @@ function seeding(index) {
     }
     lastSeedingPlace++;
   }
+
+  //連続操作可否判定
+  if(lastSeedingPlace == )
 
   //最後の種を落とした場所
   result = { lastSeedingPlace, table };
@@ -49,6 +53,7 @@ function buttonFunction(){
     buttons[j].addEventListener("click", function () {
       table = seeding(j).table;
       updateHtml();
+      canContinue(j);
     });
   }
 }
@@ -151,7 +156,7 @@ function canContinue(index) {
 }
 
 
-console.log(canContinue());
+// console.log(canContinue());
 
 // if (seeding() !== canContinue()) {
 //   if (table[index] === 1) {
