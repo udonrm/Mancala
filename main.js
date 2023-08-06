@@ -30,84 +30,99 @@ function seeding(index) {
   //最後の種を落とした場所
   result = { lastSeedingPlace, table };
 
+  //table内の要素を更新
+
+
   //更新した配列を返す
   return result;
 }
-// console.log(seeding(3).lastSeedingPlace);
+
+// console.log(seeding(3).table);
 
 //innerHTML
 const holes = document.getElementById("holes");
-holes.innerHTML = `
+
+
+//選択された場所
+// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
+let buttons = document.getElementsByClassName("btn");
+for(let j = 0; j < buttons.length; j++){
+buttons[j].addEventListener("click", function () {
+  holes.innerHTML = `
 <div class="store com" id="13">
-  <p>${table[13]}</p>
-  <img src="images/${table[13]}.png" width="40" height="40">
+  <p>${seeding(j).table[13]}</p>
+  <img src="images/${seeding(j).table[13]}.png" width="40" height="40">
 </div>
 <div class="field">
   <div class="table your">
     <div class="hole your" id="0">
       <button type="button" class="btn">
-        <p>${table[0]}</p>
-        <img src="images/${table[0]}.png" width="40" height="40">
+        <p>${seeding(j).table[0]}</p>
+        <img src="images/${seeding(j).table[0]}.png" width="40" height="40">
       </button>
       </div>
     <div class="hole your" id="1">
     <button type="button" class="btn">
-      <p>${table[1]}</p>
-      <img src="images/${table[1]}.png" width="40" height="40">
+      <p>${seeding(j).table[1]}</p>
+      <img src="images/${seeding(j).table[1]}.png" width="40" height="40">
     </button>
     </div>
     <div class="hole your" id="2">
       <button type="button" class="btn">
-        <p>${table[2]}</p>
-        <img src="images/${table[2]}.png" width="40" height="40">
+        <p>${seeding(j).table[2]}</p>
+        <img src="images/${seeding(j).table[2]}.png" width="40" height="40">
       </button>
     </div>
     <div class="hole your" id="3">
       <button type="button" class="btn">
-        <p>${table[3]}</p>
-        <img src="images/${table[3]}.png" width="40" height="40">
+        <p>${seeding(j).table[3]}</p>
+        <img src="images/${seeding(j).table[3]}.png" width="40" height="40">
       </button>
     </div>
     <div class="hole your" id="4">
       <button type="button" class="btn">
-        <p>${table[4]}</p>
-        <img src="images/${table[4]}.png" width="40" height="40">
+        <p>${seeding(j).table[4]}</p>
+        <img src="images/${seeding(j).table[4]}.png" width="40" height="40">
       </button>
     </div>
     <div class="hole your" id="5">
       <button type="button" class="btn">
-        <p>${table[5]}</p>
-        <img src="images/${table[5]}.png" width="40" height="40">
+        <p>${seeding(j).table[5]}</p>
+        <img src="images/${seeding(j).table[5]}.png" width="40" height="40">
       </button>
     </div>
   </div>
   <div class="table com">
     <div class="hole com" id="7">
-      <p>${table[7]}</p>
-      <img src="images/${table[7]}.png" width="40" height="40"></div>
+      <p>${seeding(j).table[7]}</p>
+      <img src="images/${seeding().table[7]}.png" width="40" height="40"></div>
     <div class="hole com" id="8">
-      <p>${table[8]}</p>
-      <img src="images/${table[8]}.png" width="40" height="40">
+      <p>${seeding(j).table[8]}</p>
+      <img src="images/${seeding().table[8]}.png" width="40" height="40">
     </div>
     <div class="hole com" id="9">
-      <p>${table[9]}</p>
-      <img src="images/${table[9]}.png" width="40" height="40"></div>
+      <p>${seeding(j).table[9]}</p>
+      <img src="images/${seeding(j).table[9]}.png" width="40" height="40"></div>
     <div class="hole com" id="10">
-      <p>${table[10]}</p>
-      <img src="images/${table[10]}.png" width="40" height="40"></div>
+      <p>${seeding(j).table[10]}</p>
+      <img src="images/${seeding(j).table[10]}.png" width="40" height="40"></div>
     <div class="hole com" id="11">
-      <p>${table[11]}</p>
-      <img src="images/${table[11]}.png" width="40" height="40"></div>
+      <p>${seeding(j).table[11]}</p>
+      <img src="images/${seeding(j).table[11]}.png" width="40" height="40"></div>
     <div class="hole com" id="12">
-      <p>${table[12]}</p>
-      <img src="images/${table[12]}.png" width="40" height="40"></div>
+      <p>${seeding(j).table[12]}</p>
+      <img src="images/${seeding(j).table[12]}.png" width="40" height="40"></div>
   </div>
 </div>
 <div class="store your" id="6">
-  <p>${table[6]}</p>
-  <img src="images/${table[6]}.png" width="40" height="40">
+  <p>${seeding(j).table[6]}</p>
+  <img src="images/${seeding(j).table[6]}.png" width="40" height="40">
 </div>
 `;
+});
+}
+
+
 
 //連続操作機能
 function canContinue(index) {
@@ -126,19 +141,20 @@ function canContinue(index) {
   return storePlace;
 }
 
+
 console.log(canContinue());
 
-if (seeding() !== canContinue()) {
-  if (table[index] === 1) {
-    // マスに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
-    captureComStones();
-  }
-  // 自分のターンが続く場合はターンを続ける
-  // (ここに処理を追加)
-} else {
-  // 自分のターンが終わる場合、相手のターンを呼び出す
-  computerTurn();
-}
+// if (seeding() !== canContinue()) {
+//   if (table[index] === 1) {
+//     // マスに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
+//     captureComStones();
+//   }
+//   // 自分のターンが続く場合はターンを続ける
+//   // (ここに処理を追加)
+// } else {
+//   // 自分のターンが終わる場合、相手のターンを呼び出す
+//   computerTurn();
+// }
 //各マスの変数の定義(初期値設定)
 
 //コンピュータが選択できるマスの条件
@@ -173,14 +189,7 @@ function computerTurn() {
   table = seeding(indexSelectedByCom);
 }
 
-//選択された場所
-// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
-let button = document.getElementsByClassName("btn");
-for (let j = 0; j <= 5; j++) {
-  button[j].addEventListener("click", function () {
-    seeding(j);
-  });
-}
+
 
 // //各マスの変数の定義(初期値設定)
 
