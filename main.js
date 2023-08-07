@@ -18,12 +18,10 @@ function seeding(index) {
   for (let i = index + 1; i <= selectedNumberOfStone + index; i++) {
     //石の移動の増減処理
     //スタート地点から次のインデックス番号の石の数を条件の回数だけ1ずつ増やす
-    table[i]++;
+    let j = i % 14;
+    table[j]++;
     table[index]--;
-    // console.log(table[i]);
-    if (i > 13) {
-      i %= 14;
-    }
+    console.log(table);
     lastSeedingPlace++;
   }
 
@@ -46,9 +44,28 @@ function buttonFunction() {
   for (let j = 0; j < buttons.length; j++) {
     buttons[j].addEventListener("click", function () {
       table = seeding(j).table;
-      robComStones(j);
+      // robComStones(j);
       updateHtml();
-      canContinue(j);
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function myFunction() {
+        console.log("処理を開始します");
+        await sleep(3000);
+        console.log("3秒間待機しました");
+        //連続操作条件が発生しないときにコンピュータの操作を発火させる
+        if (canContinue(j) == false) {
+          let number;
+          number = canSelectIndexByCom();
+          seeding(number);
+          console.log(number);
+          updateHtml();
+          // console.log(seeding(j).table);
+        }
+      }
+      myFunction();
     });
   }
 }
@@ -142,45 +159,30 @@ function canContinue(index) {
   else if (7 <= index <= 12) storePlace = 13;
 
   let canContinue = false;
-  while (canContinue == true) {
-    if (seeding().lastSeedingPlace == storePlace) {
-      canContinue = true;
-    }
+  if (seeding().lastSeedingPlace == storePlace) {
+    canContinue = true;
   }
-  return storePlace;
+  return canContinue;
 }
-
-// if (seeding() !== canContinue()) {
-//   if (table[index] === 1) {
-//     // マスに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
-//     captureComStones();
-//   }
-//   // 自分のターンが続く場合はターンを続ける
-//   // (ここに処理を追加)
-// } else {
-//   // 自分のターンが終わる場合、相手のターンを呼び出す
-//   computerTurn();
-// }
-//各マスの変数の定義(初期値設定)
 
 //コンピュータが選択できるマスの条件
 //ランダム関数で受け取った値を使う
 //tableインデックスの7~12のうち空でない場所
 //相手が選択したマスによって配列を更新する
-// function canSelectIndexByCom() {
-//   let canSelect = false;
-//   let indexSelectedByCom;
-//   while (canSelect == false) {
-//     //コンピュータが選択したマス
-//     indexSelectedByCom = Math.floor(Math.random() * 6) + 7;
-//     if (table[indexSelectedByCom] !== null) {
-//       canSelect = true;
-//     }
-//   }
-//   // console.log(indexSelectedByCom);
-//   //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
-//   return indexSelectedByCom;
-// }
+function canSelectIndexByCom() {
+  let canSelect = false;
+  let indexSelectedByCom;
+  while (canSelect == false) {
+    //コンピュータが選択したマス
+    indexSelectedByCom = Math.floor(Math.random() * 6) + 7;
+    if (table[indexSelectedByCom] !== 0) {
+      canSelect = true;
+    }
+  }
+  // console.log(indexSelectedByCom);
+  //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
+  return indexSelectedByCom;
+}
 
 // console.log(seeding(canSelectIndexByCom()).table);
 
@@ -193,65 +195,50 @@ function canContinue(index) {
 // }
 
 //相手の操作をランダム関数で定義
-function computerTurn() {
-  let indexSelectedByCom = canSelectIndexByCom();
-  table = seeding(indexSelectedByCom);
-}
+// function computerTurn() {
+//   let indexSelectedByCom = canSelectIndexByCom();
+//   table = seeding(indexSelectedByCom);
+// }
 
 // //各マスの変数の定義(初期値設定)
 
-// //コンピュータが選択できるマスの条件
-// //ランダム関数で受け取った値を使う
-// //tableインデックスの7~12のうち空でない場所
-// //相手が選択したマスによって配列を更新する
-function canSelectIndexByCom() {
-  let canSelect = false;
-  let indexSelectedByCom;
-  while (canSelect == false) {
-    //コンピュータが選択したマス
-    indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
-    if (table[indexSelectedByCom] !== null) {
-      canSelect = true;
-    }
-  }
-  //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
-  return indexSelectedByCom;
-}
+// console.log(canSelectIndexByCom());
+// console.log(seeding(canSelectIndexByCom()));
 
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-function robComStones(number) {
-  //空のインデックスを定義
-  let addedStonesToStore = 0;
-  let frontIndex;
-  switch (number) {
-    case 0:
-      frontIndex = 12;
-      break;
-    case 1:
-      frontIndex = 11;
-      break;
-    case 2:
-      frontIndex = 10;
-      break;
-    case 3:
-      frontIndex = 9;
-      break;
-    case 4:
-      frontIndex = 8;
-      break;
-    case 5:
-      frontIndex = 7;
-      break;
-  }
-  if (table[seeding(number).lastSeedingPlace] == 0) {
-    addedStonesToStore = 1 + table[frontIndex];
-    table[6] += addedStonesToStore;
-    // table[seeding(number).lastSeedingPlace] = 0;
-    // table[frontIndex] = 0;
-  }
-  // console.log(table[seeding(0).lastSeedingPlace]);
-  return table;
-}
+// function robComStones(number) {
+//   //空のインデックスを定義
+//   let addedStonesToStore = 0;
+//   let frontIndex;
+//   switch (number) {
+//     case 0:
+//       frontIndex = 12;
+//       break;
+//     case 1:
+//       frontIndex = 11;
+//       break;
+//     case 2:
+//       frontIndex = 10;
+//       break;
+//     case 3:
+//       frontIndex = 9;
+//       break;
+//     case 4:
+//       frontIndex = 8;
+//       break;
+//     case 5:
+//       frontIndex = 7;
+//       break;
+//   }
+//   if (table[seeding(number).lastSeedingPlace] == 0) {
+//     addedStonesToStore = 1 + table[frontIndex];
+//     table[6] += addedStonesToStore;
+//     // table[seeding(number).lastSeedingPlace] = 0;
+//     // table[frontIndex] = 0;
+//   }
+//   // console.log(table[seeding(0).lastSeedingPlace]);
+//   return table;
+// }
 
 // console.log(robComStones(1));
 
