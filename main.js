@@ -12,8 +12,6 @@ let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 //連続操作条件が起こらない時にターン終了(while文)
 function seeding(index) {
   //自分のターン
-  //スタート地点の石の数を0にする
-  // selectedNumberOfStone = 0; //初期値を０
   let lastSeedingPlace = index;
   let selectedNumberOfStone = table[index];
   let canContinue = true;
@@ -30,7 +28,7 @@ function seeding(index) {
   }
 
   //連続操作可否判定
-  if(lastSeedingPlace == )
+  // if(lastSeedingPlace == )
 
   //最後の種を落とした場所
   result = { lastSeedingPlace, table };
@@ -39,19 +37,16 @@ function seeding(index) {
   return result;
 }
 
-// console.log(seeding(3).table);
+// console.log(seeding(3).lastSeedingPlace);
 
-//innerHTML
+//プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
-
-
-//選択された場所
-// let indexSelectedByPlayer = HTML側でクリックした場所のインデックスの値を返す
-function buttonFunction(){
+function buttonFunction() {
   let buttons = document.getElementsByClassName("btn");
-  for(let j = 0; j < buttons.length; j++){
+  for (let j = 0; j < buttons.length; j++) {
     buttons[j].addEventListener("click", function () {
       table = seeding(j).table;
+      robComStones(j);
       updateHtml();
       canContinue(j);
     });
@@ -60,8 +55,8 @@ function buttonFunction(){
 
 //innerHTMLで既存のHTMLの内容を更新
 //innerHTML起動後はイベントリスナーが消失するためinnerHTML描画後に再度イベントリスナーを設定
-function updateHtml(){
-    holes.innerHTML = `
+function updateHtml() {
+  holes.innerHTML = `
   <div class="store com" id="13">
     <p>${table[13]}</p>
     <img src="images/${table[13]}.png" width="40" height="40">
@@ -155,9 +150,6 @@ function canContinue(index) {
   return storePlace;
 }
 
-
-// console.log(canContinue());
-
 // if (seeding() !== canContinue()) {
 //   if (table[index] === 1) {
 //     // マスに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
@@ -175,6 +167,43 @@ function canContinue(index) {
 //ランダム関数で受け取った値を使う
 //tableインデックスの7~12のうち空でない場所
 //相手が選択したマスによって配列を更新する
+// function canSelectIndexByCom() {
+//   let canSelect = false;
+//   let indexSelectedByCom;
+//   while (canSelect == false) {
+//     //コンピュータが選択したマス
+//     indexSelectedByCom = Math.floor(Math.random() * 6) + 7;
+//     if (table[indexSelectedByCom] !== null) {
+//       canSelect = true;
+//     }
+//   }
+//   // console.log(indexSelectedByCom);
+//   //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
+//   return indexSelectedByCom;
+// }
+
+// console.log(seeding(canSelectIndexByCom()).table);
+
+//連続操作処理（条件；種まきの最後がストアに入る）
+//引数は種まきの最後の種が入るインデックス
+
+//対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
+// function robComStones(index) {
+//   for(let i = 0; )
+// }
+
+//相手の操作をランダム関数で定義
+function computerTurn() {
+  let indexSelectedByCom = canSelectIndexByCom();
+  table = seeding(indexSelectedByCom);
+}
+
+// //各マスの変数の定義(初期値設定)
+
+// //コンピュータが選択できるマスの条件
+// //ランダム関数で受け取った値を使う
+// //tableインデックスの7~12のうち空でない場所
+// //相手が選択したマスによって配列を更新する
 function canSelectIndexByCom() {
   let canSelect = false;
   let indexSelectedByCom;
@@ -189,41 +218,42 @@ function canSelectIndexByCom() {
   return indexSelectedByCom;
 }
 
-//連続操作処理（条件；種まきの最後がストアに入る）
-//引数は種まきの最後の種が入るインデックス
-
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-function captureComStones(index) {
-  // (ここに対面の相手マスを奪う処理を追加)
+function robComStones(number) {
+  //空のインデックスを定義
+  let addedStonesToStore = 0;
+  let frontIndex;
+  switch (number) {
+    case 0:
+      frontIndex = 12;
+      break;
+    case 1:
+      frontIndex = 11;
+      break;
+    case 2:
+      frontIndex = 10;
+      break;
+    case 3:
+      frontIndex = 9;
+      break;
+    case 4:
+      frontIndex = 8;
+      break;
+    case 5:
+      frontIndex = 7;
+      break;
+  }
+  if (table[seeding(number).lastSeedingPlace] == 0) {
+    addedStonesToStore = 1 + table[frontIndex];
+    table[6] += addedStonesToStore;
+    // table[seeding(number).lastSeedingPlace] = 0;
+    // table[frontIndex] = 0;
+  }
+  // console.log(table[seeding(0).lastSeedingPlace]);
+  return table;
 }
 
-//相手の操作をランダム関数で定義
-function computerTurn() {
-  let indexSelectedByCom = canSelectIndexByCom();
-  table = seeding(indexSelectedByCom);
-}
-
-
-
-// //各マスの変数の定義(初期値設定)
-
-// //コンピュータが選択できるマスの条件
-// //ランダム関数で受け取った値を使う
-// //tableインデックスの7~12のうち空でない場所
-// //相手が選択したマスによって配列を更新する
-// function canSelectIndexByCom() {
-//   let canSelect = false;
-//   let indexSelectedByCom;
-//   while (canSelect == false) {
-//     //コンピュータが選択したマス
-//     indexSelectedByCom = Math.floor(Math.random() * 6) + 6;
-//     if (table[indexSelectedByCom] !== null) {
-//       canSelect = true;
-//     }
-//   }
-//   //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
-//   return indexSelectedByCom;
-// }
+// console.log(robComStones(1));
 
 // //普遍的な増減処理
 
@@ -241,11 +271,6 @@ function computerTurn() {
 //     // 自分のターンが終わる場合、相手のターンを呼び出す
 //     computerTurn();
 //   }
-// }
-
-// //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-// function captureOpponentStones(index) {
-//   // (ここに対面の相手マスを奪う処理を追加)
 // }
 
 // //相手の操作をランダム関数で定義
