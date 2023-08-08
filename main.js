@@ -1,5 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
+let table = [3, 3, 3, 3, 3, 0, 0, 3, 3, 0, 0, 0, 0, 0];
 
 //クリックしたコマの場所
 
@@ -10,20 +10,28 @@ let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 //普遍的な増減処理
 //敵と自分の操作を区別しない
 //連続操作条件が起こらない時にターン終了(while文)
-function seeding(index) {
+let lastSeedingPlace;
+let index;
+
+function seeding(selectedIndexNumber) {
   //自分のターン
-  let lastSeedingPlace = index;
-  let selectedNumberOfStone = table[index];
+  lastSeedingPlace = selectedIndexNumber;
+  let selectedNumberOfStone = table[selectedIndexNumber];
   let canContinue = true;
-  for (let i = index + 1; i <= selectedNumberOfStone + index; i++) {
+  for (
+    let i = selectedIndexNumber + 1;
+    i <= selectedNumberOfStone + selectedIndexNumber;
+    i++
+  ) {
     //石の移動の増減処理
     //スタート地点から次のインデックス番号の石の数を条件の回数だけ1ずつ増やす
     let j = i % 14;
     table[j]++;
-    table[index]--;
-    console.log(table);
+    table[selectedIndexNumber]--;
+    // console.log(table);
     lastSeedingPlace++;
   }
+  // console.log(lastSeedingPlace);
 
   //連続操作可否判定
   // if(lastSeedingPlace == )
@@ -35,7 +43,7 @@ function seeding(index) {
   return result;
 }
 
-// console.log(seeding(3).lastSeedingPlace);
+// console.log(seeding(2).lastSeedingPlace);
 
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
@@ -44,7 +52,8 @@ function buttonFunction() {
   for (let j = 0; j < buttons.length; j++) {
     buttons[j].addEventListener("click", function () {
       table = seeding(j).table;
-      // robComStones(j);
+      robComStones(j);
+      // console.log("robComStones:" + robComStones(j));
       updateHtml();
 
       function sleep(ms) {
@@ -60,7 +69,8 @@ function buttonFunction() {
           let number;
           number = canSelectIndexByCom();
           seeding(number);
-          console.log(number);
+          robComStones();
+          // console.log(number);
           updateHtml();
           // console.log(seeding(j).table);
         }
@@ -151,15 +161,20 @@ function updateHtml() {
 buttonFunction();
 
 //連続操作機能
-function canContinue(index) {
+function storeIndex(playerIndex) {
   let storePlace;
-  //プレイヤーのマスの選択
-  if (0 <= index <= 5) storePlace = 6;
-  //相手のマスの選択
-  else if (7 <= index <= 12) storePlace = 13;
 
+  //プレイヤーのマスの選択
+  if (0 <= playerIndex <= 5) storePlace = 6;
+  //相手のマスの選択
+  else if (7 <= playerIndex <= 12) storePlace = 13;
+
+  return storePlace;
+}
+
+function canContinue(selectedIndexNumber) {
   let canContinue = false;
-  if (seeding().lastSeedingPlace == storePlace) {
+  if (lastSeedingPlace == storeIndex(selectedIndexNumber)) {
     canContinue = true;
   }
   return canContinue;
@@ -206,41 +221,63 @@ function canSelectIndexByCom() {
 // console.log(seeding(canSelectIndexByCom()));
 
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-// function robComStones(number) {
-//   //空のインデックスを定義
-//   let addedStonesToStore = 0;
-//   let frontIndex;
-//   switch (number) {
-//     case 0:
-//       frontIndex = 12;
-//       break;
-//     case 1:
-//       frontIndex = 11;
-//       break;
-//     case 2:
-//       frontIndex = 10;
-//       break;
-//     case 3:
-//       frontIndex = 9;
-//       break;
-//     case 4:
-//       frontIndex = 8;
-//       break;
-//     case 5:
-//       frontIndex = 7;
-//       break;
-//   }
-//   if (table[seeding(number).lastSeedingPlace] == 0) {
-//     addedStonesToStore = 1 + table[frontIndex];
-//     table[6] += addedStonesToStore;
-//     // table[seeding(number).lastSeedingPlace] = 0;
-//     // table[frontIndex] = 0;
-//   }
-//   // console.log(table[seeding(0).lastSeedingPlace]);
-//   return table;
-// }
 
-// console.log(robComStones(1));
+function robComStones() {
+  //ストアに追加する石の数を定義
+  let addedStonesToStore = 0;
+  //対面のインデックスを定義
+  let frontIndex;
+  switch (lastSeedingPlace) {
+    case 0:
+      frontIndex = 12;
+      break;
+    case 1:
+      frontIndex = 11;
+      break;
+    case 2:
+      frontIndex = 10;
+      break;
+    case 3:
+      frontIndex = 9;
+      break;
+    case 4:
+      frontIndex = 8;
+      break;
+    case 5:
+      frontIndex = 7;
+      break;
+    case 7:
+      frontIndex = 5;
+      break;
+    case 8:
+      frontIndex = 4;
+      break;
+    case 9:
+      frontIndex = 3;
+      break;
+    case 10:
+      frontIndex = 2;
+      break;
+    case 11:
+      frontIndex = 1;
+      break;
+    case 12:
+      frontIndex = 0;
+      break;
+  }
+  //種まきの最後の場所の石の個数が1の時
+  // console.log(table[lastSeedingPlace]);
+  if (table[lastSeedingPlace] == 1) {
+    addedStonesToStore = 1 + table[frontIndex];
+    table[storeIndex(index)] += addedStonesToStore;
+    table[lastSeedingPlace] = 0;
+    table[frontIndex] = 0;
+  }
+  return table;
+}
+// console.log(table[seeding(2).lastSeedingPlace]);
+// console.log(seeding(2).lastSeedingPlace);
+// console.log(robComStones(2));
 
 // //普遍的な増減処理
 
