@@ -1,5 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 3, 3, 3, 0, 0, 3, 3, 0, 0, 0, 0, 0];
+let table = [3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0];
 
 //クリックしたコマの場所
 
@@ -65,11 +65,13 @@ function buttonFunction() {
         await sleep(3000);
         console.log("3秒間待機しました");
         //連続操作条件が発生しないときにコンピュータの操作を発火させる
+        if (canContinue(j) == true) console.log("もう一度操作できます");
         if (canContinue(j) == false) {
+          document.getElementsByClassName("btn").disabled = true;
           let number;
           number = canSelectIndexByCom();
           seeding(number);
-          robComStones();
+          robComStones(number);
           // console.log(number);
           updateHtml();
           // console.log(seeding(j).table);
@@ -163,14 +165,14 @@ buttonFunction();
 //連続操作機能
 function storeIndex(playerIndex) {
   let storePlace;
-
   //プレイヤーのマスの選択
-  if (0 <= playerIndex <= 5) storePlace = 6;
+  if (0 <= playerIndex && playerIndex <= 5) storePlace = 6;
   //相手のマスの選択
-  else if (7 <= playerIndex <= 12) storePlace = 13;
+  else if (7 <= playerIndex && playerIndex <= 12) storePlace = 13;
 
   return storePlace;
 }
+// console.log(storeIndex(3));
 
 function canContinue(selectedIndexNumber) {
   let canContinue = false;
@@ -204,11 +206,6 @@ function canSelectIndexByCom() {
 //連続操作処理（条件；種まきの最後がストアに入る）
 //引数は種まきの最後の種が入るインデックス
 
-//対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
-// function robComStones(index) {
-//   for(let i = 0; )
-// }
-
 //相手の操作をランダム関数で定義
 // function computerTurn() {
 //   let indexSelectedByCom = canSelectIndexByCom();
@@ -222,7 +219,9 @@ function canSelectIndexByCom() {
 
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
 
-function robComStones() {
+function robComStones(index) {
+  let myHole = false;
+
   //ストアに追加する石の数を定義
   let addedStonesToStore = 0;
   //対面のインデックスを定義
@@ -265,9 +264,27 @@ function robComStones() {
       frontIndex = 0;
       break;
   }
+
+  if (
+    (0 <= index &&
+      index <= 5 &&
+      1 <= lastSeedingPlace &&
+      lastSeedingPlace <= 5) ||
+    (7 <= index &&
+      index <= 12 &&
+      8 <= lastSeedingPlace &&
+      lastSeedingPlace <= 12)
+  ) {
+    myHole = true;
+  }
+
   //種まきの最後の場所の石の個数が1の時
   // console.log(table[lastSeedingPlace]);
-  if (table[lastSeedingPlace] == 1) {
+  if (
+    table[lastSeedingPlace] == 1 &&
+    myHole == true &&
+    table[frontIndex] != 0
+  ) {
     addedStonesToStore = 1 + table[frontIndex];
     table[storeIndex(index)] += addedStonesToStore;
     table[lastSeedingPlace] = 0;
@@ -275,6 +292,7 @@ function robComStones() {
   }
   return table;
 }
+
 // console.log(table[seeding(2).lastSeedingPlace]);
 // console.log(seeding(2).lastSeedingPlace);
 // console.log(robComStones(2));
