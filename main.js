@@ -1,9 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0];
-
-//クリックしたコマの場所
-
-// //選択された場所の石の数
+let table = [3, 3, 4, 3, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0];
 
 //種まきを1度だけ行う関数
 //連続操作条件が発生するときにもう一度呼び出される
@@ -17,7 +13,6 @@ function seeding(selectedIndexNumber) {
   //自分のターン
   lastSeedingPlace = selectedIndexNumber;
   let selectedNumberOfStone = table[selectedIndexNumber];
-  let canContinue = true;
   for (
     let i = selectedIndexNumber + 1;
     i <= selectedNumberOfStone + selectedIndexNumber;
@@ -44,37 +39,62 @@ function seeding(selectedIndexNumber) {
 }
 
 // console.log(seeding(2).lastSeedingPlace);
-
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
 function buttonFunction() {
   let buttons = document.getElementsByClassName("btn");
   for (let j = 0; j < buttons.length; j++) {
     buttons[j].addEventListener("click", function () {
+      for (let n = 0; n < buttons.length; n++) {
+        buttons[n].disabled = false;
+      }
       table = seeding(j).table;
       robComStones(j);
       // console.log("robComStones:" + robComStones(j));
       updateHtml();
+      for (let n = 0; n < buttons.length; n++) {
+        buttons[n].disabled = true;
+      }
 
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
-
       async function myFunction() {
         console.log("処理を開始します");
         await sleep(3000);
         console.log("3秒間待機しました");
+
+        if (canContinue(j) == true) {
+          document.getElementById("gameIntroduction").innerHTML = `
+          もう一度操作できます
+          `;
+          updateHtml();
+        }
         //連続操作条件が発生しないときにコンピュータの操作を発火させる
-        if (canContinue(j) == true) console.log("もう一度操作できます");
-        if (canContinue(j) == false) {
-          document.getElementsByClassName("btn").disabled = true;
+        else if (canContinue(j) == false) {
+          document.getElementById("gameIntroduction").innerHTML = `
+          `;
           let number;
           number = canSelectIndexByCom();
           seeding(number);
           robComStones(number);
-          // console.log(number);
           updateHtml();
-          // console.log(seeding(j).table);
+          for (let n = 0; n < buttons.length; n++) {
+            buttons[n].disabled = true;
+          }
+          await sleep(3000);
+          console.log("3秒間待機しました");
+
+          console.log("3秒間待機しました");
+          for (let n = 0; n < buttons.length; n++) {
+            buttons[n].disabled = false;
+          }
+          while (canContinue(number) == true) {
+            number = canSelectIndexByCom();
+            seeding(number);
+            robComStones(number);
+            updateHtml();
+          }
         }
       }
       myFunction();
@@ -172,15 +192,16 @@ function storeIndex(playerIndex) {
 
   return storePlace;
 }
-// console.log(storeIndex(3));
 
 function canContinue(selectedIndexNumber) {
   let canContinue = false;
   if (lastSeedingPlace == storeIndex(selectedIndexNumber)) {
     canContinue = true;
   }
+  // console.log(canContinue);
   return canContinue;
 }
+// console.log(canContinue(3));
 
 //コンピュータが選択できるマスの条件
 //ランダム関数で受け取った値を使う
@@ -200,22 +221,6 @@ function canSelectIndexByCom() {
   //コンピュータが選択したインデックスを返してこの値をseeding関数で再利用する
   return indexSelectedByCom;
 }
-
-// console.log(seeding(canSelectIndexByCom()).table);
-
-//連続操作処理（条件；種まきの最後がストアに入る）
-//引数は種まきの最後の種が入るインデックス
-
-//相手の操作をランダム関数で定義
-// function computerTurn() {
-//   let indexSelectedByCom = canSelectIndexByCom();
-//   table = seeding(indexSelectedByCom);
-// }
-
-// //各マスの変数の定義(初期値設定)
-
-// console.log(canSelectIndexByCom());
-// console.log(seeding(canSelectIndexByCom()));
 
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
 
@@ -293,51 +298,8 @@ function robComStones(index) {
   return table;
 }
 
-// console.log(table[seeding(2).lastSeedingPlace]);
-// console.log(seeding(2).lastSeedingPlace);
-// console.log(robComStones(2));
-
-// //普遍的な増減処理
-
-// function seeding(index) {
-//   //連続操作処理（条件；種まきの最後がストアに入る）
-//   if (i !== 13) {
-//     // 13は自分のストアのインデックス
-//     if (table[i] === 1) {
-//       // ストアに入った石が1つの場合、対面の相手マスを奪う処理を呼び出す
-//       captureOpponentStones(i);
-//     }
-//     // 自分のターンが続く場合はターンを続ける
-//     // (ここに処理を追加)
-//   } else {
-//     // 自分のターンが終わる場合、相手のターンを呼び出す
-//     computerTurn();
-//   }
-// }
-
-// //相手の操作をランダム関数で定義
-// function computerTurn() {
-//   let indexSelectedByCom = canSelectIndexByCom();
-//   table = seeding(indexSelectedByCom);
-// }
-
-// //自分のターンを表示
-// function displayPlayerTurn() {
-//   // (ここに自分のターンを表示する処理を追加)
-// }
-
-// // ボタンクリック後、sleep関数で処理を待たせる
-
 // // 試合終了処理（どちらかのプレーヤーのマスが全て空）
 
 // // 勝者判定
 
 // // 勝者表示
-
-//ボタンクリック後、sleep関数で処理を待たせる
-
-//試合終了処理（どちらかのプレーヤーのマスが全て空）
-
-//勝者判定
-
-//勝者表示
