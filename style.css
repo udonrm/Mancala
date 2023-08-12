@@ -29,6 +29,13 @@ body {
   text-align: center;
 }
 
+#judgementOfWinner{
+  margin-top: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .container {
   margin-top: 100px;
   width: 1000px;
