@@ -29,7 +29,7 @@ body {
   text-align: center;
 }
 
-#judgementOfWinner{
+#judgementOfWinner {
   margin-top: 50px;
   font-size: 30px;
   font-weight: bold;
@@ -96,7 +96,16 @@ button {
 }
 
 .buttonHighLight {
+  background: burlywood;
+  border-radius: 200px;
+  width: 90px;
+  height: 90px;
+  margin: 10px;
   border: 4px red solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 p {

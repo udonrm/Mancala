@@ -1,28 +1,30 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
 let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 
-function yourStones(){
+function yourStones() {
   let yourStones = 0;
-  for(let i = 0; i <= 5; i++){
+  for (let i = 0; i <= 5; i++) {
     yourStones += table[i];
-  } return yourStones;
-} 
+  }
+  return yourStones;
+}
 
-function comStones(){
+function comStones() {
   let comStones = 0;
-  for(let i = 7; i <= 12; i++){
+  for (let i = 7; i <= 12; i++) {
     comStones += table[i];
-  } return comStones;
-} 
+  }
+  return comStones;
+}
 
-function tidyUp(){
-  if(comStones() == 0){
-    for(let i = 0; i <= 5; i++){
+function tidyUp() {
+  if (comStones() == 0) {
+    for (let i = 0; i <= 5; i++) {
       table[6] += table[i];
       table[i] = 0;
     }
-  }else if(yourStones() == 0){
-    for(let i = 7; i <= 12; i++){
+  } else if (yourStones() == 0) {
+    for (let i = 7; i <= 12; i++) {
       table[13] += table[i];
       table[i] = 0;
     }
@@ -30,21 +32,21 @@ function tidyUp(){
   return table;
 }
 
-function judgeWinner(){
+function judgeWinner() {
   tidyUp();
-  if(yourStones() == 0 || comStones() == 0){
-    if(table[6] > table[13]){
+  if (yourStones() == 0 || comStones() == 0) {
+    if (table[6] > table[13]) {
       console.log("aaa");
-      document.getElementById('judgementOfWinner').innerHTML = `
+      document.getElementById("judgementOfWinner").innerHTML = `
         You win.
       `;
-    }else if(table[6] < table[13]){
+    } else if (table[6] < table[13]) {
       console.log("b");
-      document.getElementById('judgementOfWinner').innerHTML = `
+      document.getElementById("judgementOfWinner").innerHTML = `
         CPU win.
       `;
-    }else{
-      document.getElementById('judgementOfWinner').innerHTML = `
+    } else {
+      document.getElementById("judgementOfWinner").innerHTML = `
         Draw.
       `;
     }
@@ -91,6 +93,7 @@ function seeding(selectedIndexNumber) {
 // console.log(seeding(2).lastSeedingPlace);
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
+const highlightedButton = document.querySelectorAll(".table .hole");
 
 function buttonFunction() {
   let buttons = document.getElementsByClassName("btn");
@@ -107,8 +110,12 @@ function buttonFunction() {
       // console.log("robComStones:" + robComStones(j));
       judgeWinner();
       updateHtml();
-      buttons[j].classList.add("buttonHighLight");
 
+      const highlightedId = document.setAttribute(
+        "id",
+        "highlightedButton.hole[j]"
+      );
+      highlightedId.classList.add("buttonHighLight");
       for (let n = 0; n < buttons.length; n++) {
         buttons[n].disabled = true;
       }
@@ -383,7 +390,7 @@ function robComStones(index) {
 }
 
 // // 試合終了処理（どちらかのプレーヤーのマスが全て空）
- 
+
 // // 勝者判定
 
 // // 勝者表示
