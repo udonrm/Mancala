@@ -8,12 +8,21 @@ header {
   text-align: center;
 }
 body {
+  background-color: #ffffcc;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 #gameIntroduction {
+  color: red;
+  margin-top: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#drawTurn {
   margin-top: 50px;
   font-size: 30px;
   font-weight: bold;
@@ -59,10 +68,6 @@ body {
   flex-direction: column;
 }
 
-.hole.your:hover {
-  filter: saturate(200%);
-}
-
 .store {
   background: burlywood;
   border-radius: 100px;
@@ -81,6 +86,10 @@ button {
   border: none;
   outline: none;
   padding: 0;
+}
+
+.buttonHighLight {
+  border: 4px red solid;
 }
 
 p {

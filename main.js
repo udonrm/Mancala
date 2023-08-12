@@ -1,5 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 4, 3, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0];
+let table = [3, 3, 3, 0, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
 
 //種まきを1度だけ行う関数
 //連続操作条件が発生するときにもう一度呼び出される
@@ -41,6 +41,7 @@ function seeding(selectedIndexNumber) {
 // console.log(seeding(2).lastSeedingPlace);
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
+
 function buttonFunction() {
   let buttons = document.getElementsByClassName("btn");
   for (let j = 0; j < buttons.length; j++) {
@@ -48,10 +49,15 @@ function buttonFunction() {
       for (let n = 0; n < buttons.length; n++) {
         buttons[n].disabled = false;
       }
+      document.getElementById("drawTurn").innerHTML = `
+      `;
+      document.getElementById("gameIntroduction").innerHTML = ``;
       table = seeding(j).table;
       robComStones(j);
       // console.log("robComStones:" + robComStones(j));
       updateHtml();
+      buttons[j].classList.add("buttonHighLight");
+
       for (let n = 0; n < buttons.length; n++) {
         buttons[n].disabled = true;
       }
@@ -60,11 +66,11 @@ function buttonFunction() {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
       async function myFunction() {
-        console.log("処理を開始します");
         await sleep(3000);
-        console.log("3秒間待機しました");
-
         if (canContinue(j) == true) {
+          document.getElementById("drawTurn").innerHTML = `
+          あなたのターンです
+          `;
           document.getElementById("gameIntroduction").innerHTML = `
           もう一度操作できます
           `;
@@ -72,28 +78,50 @@ function buttonFunction() {
         }
         //連続操作条件が発生しないときにコンピュータの操作を発火させる
         else if (canContinue(j) == false) {
-          document.getElementById("gameIntroduction").innerHTML = `
+          document.getElementById("gameIntroduction").innerHTML = ``;
+          document.getElementById("drawTurn").innerHTML = `
+          COMのターンです
           `;
+          await sleep(3000);
           let number;
           number = canSelectIndexByCom();
           seeding(number);
           robComStones(number);
           updateHtml();
+          document.getElementById("drawTurn").innerHTML = `
+          `;
           for (let n = 0; n < buttons.length; n++) {
             buttons[n].disabled = true;
           }
           await sleep(3000);
-          console.log("3秒間待機しました");
-
-          console.log("3秒間待機しました");
           for (let n = 0; n < buttons.length; n++) {
             buttons[n].disabled = false;
           }
+          document.getElementById("drawTurn").innerHTML = `
+          あなたのターンです
+          `;
           while (canContinue(number) == true) {
+            for (let n = 0; n < buttons.length; n++) {
+              buttons[n].disabled = true;
+            }
+            document.getElementById("drawTurn").innerHTML = `
+            COMのターンです
+            `;
+            document.getElementById("gameIntroduction").innerHTML = `
+            コンピュータがもう一度操作できます
+            `;
+            await sleep(3000);
             number = canSelectIndexByCom();
             seeding(number);
             robComStones(number);
             updateHtml();
+            for (let n = 0; n < buttons.length; n++) {
+              buttons[n].disabled = false;
+            }
+            document.getElementById("drawTurn").innerHTML = `
+            あなたのターンです
+            `;
+            document.getElementById("gameIntroduction").innerHTML = ``;
           }
         }
       }
@@ -117,12 +145,12 @@ function updateHtml() {
           <p>${table[0]}</p>
           <img src="images/${table[0]}.png" width="40" height="40">
         </button>
-        </div>
+      </div>
       <div class="hole your" id="1">
-      <button type="button" class="btn">
-        <p>${table[1]}</p>
-        <img src="images/${table[1]}.png" width="40" height="40">
-      </button>
+        <button type="button" class="btn">
+          <p>${table[1]}</p>
+          <img src="images/${table[1]}.png" width="40" height="40">
+        </button>
       </div>
       <div class="hole your" id="2">
         <button type="button" class="btn">
@@ -284,12 +312,14 @@ function robComStones(index) {
   }
 
   //種まきの最後の場所の石の個数が1の時
-  // console.log(table[lastSeedingPlace]);
   if (
     table[lastSeedingPlace] == 1 &&
     myHole == true &&
     table[frontIndex] != 0
   ) {
+    document.getElementById("gameIntroduction").innerHTML = `
+    対面の石を奪いました
+    `;
     addedStonesToStore = 1 + table[frontIndex];
     table[storeIndex(index)] += addedStonesToStore;
     table[lastSeedingPlace] = 0;
