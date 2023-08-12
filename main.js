@@ -1,5 +1,58 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 4, 3, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0];
+let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
+
+function yourStones(){
+  let yourStones = 0;
+  for(let i = 0; i <= 5; i++){
+    yourStones += table[i];
+  } return yourStones;
+} 
+
+function comStones(){
+  let comStones = 0;
+  for(let i = 7; i <= 12; i++){
+    comStones += table[i];
+  } return comStones;
+} 
+
+function tidyUp(){
+  if(comStones() == 0){
+    for(let i = 0; i <= 5; i++){
+      table[6] += table[i];
+      table[i] = 0;
+    }
+  }else if(yourStones() == 0){
+    for(let i = 7; i <= 12; i++){
+      table[13] += table[i];
+      table[i] = 0;
+    }
+  }
+  return table;
+}
+
+function judgeWinner(){
+  tidyUp();
+  if(yourStones() == 0 || comStones() == 0){
+    if(table[6] > table[13]){
+      console.log("aaa");
+      document.getElementById('judgementOfWinner').innerHTML = `
+        You win.
+      `;
+    }else if(table[6] < table[13]){
+      console.log("b");
+      document.getElementById('judgementOfWinner').innerHTML = `
+        CPU win.
+      `;
+    }else{
+      document.getElementById('judgementOfWinner').innerHTML = `
+        Draw.
+      `;
+    }
+  }
+}
+
+
+    
 
 //種まきを1度だけ行う関数
 //連続操作条件が発生するときにもう一度呼び出される
@@ -51,6 +104,7 @@ function buttonFunction() {
       table = seeding(j).table;
       robComStones(j);
       // console.log("robComStones:" + robComStones(j));
+      judgeWinner();
       updateHtml();
       for (let n = 0; n < buttons.length; n++) {
         buttons[n].disabled = true;
@@ -68,6 +122,7 @@ function buttonFunction() {
           document.getElementById("gameIntroduction").innerHTML = `
           もう一度操作できます
           `;
+          judgeWinner();
           updateHtml();
         }
         //連続操作条件が発生しないときにコンピュータの操作を発火させる
@@ -78,6 +133,7 @@ function buttonFunction() {
           number = canSelectIndexByCom();
           seeding(number);
           robComStones(number);
+          judgeWinner();
           updateHtml();
           for (let n = 0; n < buttons.length; n++) {
             buttons[n].disabled = true;
@@ -93,6 +149,7 @@ function buttonFunction() {
             number = canSelectIndexByCom();
             seeding(number);
             robComStones(number);
+            judgeWinner();
             updateHtml();
           }
         }
@@ -299,7 +356,7 @@ function robComStones(index) {
 }
 
 // // 試合終了処理（どちらかのプレーヤーのマスが全て空）
-
+ 
 // // 勝者判定
 
 // // 勝者表示
