@@ -144,32 +144,41 @@ function buttonFunction() {
             for (let n = 0; n < buttons.length; n++) {
               buttons[n].disabled = true;
             }
-            if (bool) {
-              return;
-            }
+            // if (bool) {
+            //   document.getElementById("drawTurn").innerHTML = ``;
+            //   return;
+            // }
             await sleep(3000);
             for (let n = 0; n < buttons.length; n++) {
               buttons[n].disabled = false;
             }
-            document.getElementById("drawTurn").innerHTML = `
-          あなたのターンです
-          `;
+            if (judgeWinner() == false) {
+              document.getElementById("drawTurn").innerHTML = `
+              あなたのターンです
+              `;
+            }
             while (canContinue(number) == true) {
               for (let n = 0; n < buttons.length; n++) {
                 buttons[n].disabled = true;
               }
-              document.getElementById("drawTurn").innerHTML = `
-            COMのターンです
-            `;
-              document.getElementById("gameIntroduction").innerHTML = `
-            コンピュータがもう一度操作できます
-            `;
+              if (judgeWinner() == false) {
+                document.getElementById("drawTurn").innerHTML = `
+                COMのターンです
+                `;
+                document.getElementById("gameIntroduction").innerHTML = `
+                コンピュータがもう一度操作できます
+                `;
+              }
               await sleep(3000);
               number = canSelectIndexByCom();
               seeding(number);
               robComStones(number);
               judgeWinner();
               updateHtml();
+              if (bool) {
+                document.getElementById("drawTurn").innerHTML = ``;
+                return;
+              }
               for (let n = 0; n < buttons.length; n++) {
                 buttons[n].disabled = false;
               }
@@ -294,9 +303,10 @@ function canSelectIndexByCom() {
   while (canSelect == false) {
     //コンピュータが選択したマス
     indexSelectedByCom = Math.floor(Math.random() * 6) + 7;
-    bool = true;
-    if (comStones() == 0) break;
-    else if (table[indexSelectedByCom] !== 0) {
+    if (comStones() == 0) {
+      bool = true;
+      break;
+    } else if (table[indexSelectedByCom] !== 0) {
       canSelect = true;
     }
   }

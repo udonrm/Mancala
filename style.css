@@ -38,6 +38,9 @@ body {
   border: 2px white solid;
   background-color: whitesmoke;
   margin-top: 10px;
+  margin-right: 50px;
+  margin-left: 50px;
+  margin-bottom: 50px;
   font-size: 30px;
   font-weight: bold;
   text-align: center;
