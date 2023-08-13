@@ -1,5 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0];
+let table = [0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0];
 
 function yourStones() {
   let yourStones = 0;
@@ -33,27 +33,39 @@ function tidyUp() {
 }
 
 function judgeWinner() {
-  tidyUp();
-  if (yourStones() == 0 || comStones() == 0) {
-    if (table[6] > table[13]) {
-      document.getElementById("judgementOfWinner").innerHTML = `
-        ${table[6]} - ${table[13]}<br>
-        You win.
-      `;
-    } else if (table[6] < table[13]) {
-      document.getElementById("judgementOfWinner").innerHTML = `
-      ${table[6]} - ${table[13]}<br>
-        CPU win.
-      `;
-    } else {
-      document.getElementById("judgementOfWinner").innerHTML = `
-      ${table[6]} - ${table[13]}<br>
-        Draw.
-      `;
-    }
-    document.getElementById("drawTurn").innerHTML = ``;
-    document.getElementById("gameIntroduction").innerHTML = ``;
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
+  async function myFunction() {
+    
+    if (yourStones() == 0 || comStones() == 0) {
+      document.getElementById("drawTurn").innerHTML = ``;
+      document.getElementById("gameIntroduction").innerHTML = ``;
+      await sleep(3000);
+      tidyUp();
+      
+      
+      if (table[6] > table[13]) {
+        document.getElementById("judgementOfWinner").innerHTML = `
+          ${table[6]} - ${table[13]}<br>
+          You win.
+        `;
+      } else if (table[6] < table[13]) {
+        document.getElementById("judgementOfWinner").innerHTML = `
+        ${table[6]} - ${table[13]}<br>
+          CPU win.
+        `;
+      } else {
+        document.getElementById("judgementOfWinner").innerHTML = `
+        ${table[6]} - ${table[13]}<br>
+          Draw.
+        `;
+      }
+    }
+    return true;
+  }
+  myFunction();
+  updateHtml();
 }
 
 //種まきを1度だけ行う関数
@@ -97,19 +109,22 @@ function seeding(selectedIndexNumber) {
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
 
+let buttons = document.getElementsByClassName("btn");
+
 function buttonFunction() {
-  let buttons = document.getElementsByClassName("btn");
+  
   for (let j = 0; j < buttons.length; j++) {
     if (table[j] !== 0) {
       buttons[j].addEventListener("click", function () {
-        for (let n = 0; n < buttons.length; n++) {
-          buttons[n].disabled = false;
-        }
+        // for (let n = 0; n < buttons.length; n++) {
+        //   buttons[n].disabled = false;
+        // }
         document.getElementById("drawTurn").innerHTML = ``;
         document.getElementById("gameIntroduction").innerHTML = ``;
         table = seeding(j).table;
         robComStones(j);
         judgeWinner();
+        if(judgeWinner()) return true;
         updateHtml();
         const highlightedButton = document.querySelectorAll(".table .hole");
         highlightedButton[j].classList.add("buttonHighLight");
@@ -130,6 +145,7 @@ function buttonFunction() {
           もう一度操作できます
           `;
             judgeWinner();
+            if(judgeWinner()) return true;
             updateHtml();
           }
           //連続操作条件が発生しないときにコンピュータの操作を発火させる
@@ -138,13 +154,21 @@ function buttonFunction() {
             document.getElementById("drawTurn").innerHTML = `
           COMのターンです
           `;
+          for (let n = 0; n < buttons.length; n++) {
+            buttons[n].disabled = true;
+          }
+          
             await sleep(3000);
             let number;
             number = canSelectIndexByCom();
             seeding(number);
             robComStones(number);
             judgeWinner();
+            if(judgeWinner()) return true;
             updateHtml();
+            for (let n = 0; n < buttons.length; n++) {
+              buttons[n].disabled = true;
+            }
             const highlightedButton = document.querySelectorAll(".table .hole");
             highlightedButton[number - 1].classList.add("buttonHighLight");
             document.getElementById("drawTurn").innerHTML = `
@@ -174,7 +198,14 @@ function buttonFunction() {
               seeding(number);
               robComStones(number);
               judgeWinner();
+              if(judgeWinner()) return true;
               updateHtml();
+              for (let n = 0; n < buttons.length; n++) {
+                buttons[n].disabled = true;
+              }
+              const highlightedButton = document.querySelectorAll(".table .hole");
+              highlightedButton[number - 1].classList.add("buttonHighLight");
+              await sleep(3000);
               for (let n = 0; n < buttons.length; n++) {
                 buttons[n].disabled = false;
               }
@@ -313,79 +344,101 @@ function canSelectIndexByCom() {
 //対面の相手マスを奪える処理(条件；種まきの最後が自陣の空のマスに入る)
 
 function robComStones(index) {
-  let myHole = false;
-
-  //ストアに追加する石の数を定義
-  let addedStonesToStore = 0;
-  //対面のインデックスを定義
-  let frontIndex;
-  switch (lastSeedingPlace) {
-    case 0:
-      frontIndex = 12;
-      break;
-    case 1:
-      frontIndex = 11;
-      break;
-    case 2:
-      frontIndex = 10;
-      break;
-    case 3:
-      frontIndex = 9;
-      break;
-    case 4:
-      frontIndex = 8;
-      break;
-    case 5:
-      frontIndex = 7;
-      break;
-    case 7:
-      frontIndex = 5;
-      break;
-    case 8:
-      frontIndex = 4;
-      break;
-    case 9:
-      frontIndex = 3;
-      break;
-    case 10:
-      frontIndex = 2;
-      break;
-    case 11:
-      frontIndex = 1;
-      break;
-    case 12:
-      frontIndex = 0;
-      break;
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
+  async function myFunction2() {
+    
+    
 
-  if (
-    (0 <= index &&
-      index <= 5 &&
-      1 <= lastSeedingPlace &&
-      lastSeedingPlace <= 5) ||
-    (7 <= index &&
-      index <= 12 &&
-      8 <= lastSeedingPlace &&
-      lastSeedingPlace <= 12)
-  ) {
-    myHole = true;
-  }
+    let myHole = false;
 
-  //種まきの最後の場所の石の個数が1の時
-  if (
-    table[lastSeedingPlace] == 1 &&
-    myHole == true &&
-    table[frontIndex] != 0
-  ) {
-    document.getElementById("gameIntroduction").innerHTML = `
-    対面の石を奪いました
-    `;
-    addedStonesToStore = 1 + table[frontIndex];
-    table[storeIndex(index)] += addedStonesToStore;
-    table[lastSeedingPlace] = 0;
-    table[frontIndex] = 0;
+    //ストアに追加する石の数を定義
+    let addedStonesToStore = 0;
+    //対面のインデックスを定義
+    let frontIndex;
+    switch (lastSeedingPlace) {
+      case 0:
+        frontIndex = 12;
+        break;
+      case 1:
+        frontIndex = 11;
+        break;
+      case 2:
+        frontIndex = 10;
+        break;
+      case 3:
+        frontIndex = 9;
+        break;
+      case 4:
+        frontIndex = 8;
+        break;
+      case 5:
+        frontIndex = 7;
+        break;
+      case 7:
+        frontIndex = 5;
+        break;
+      case 8:
+        frontIndex = 4;
+        break;
+      case 9:
+        frontIndex = 3;
+        break;
+      case 10:
+        frontIndex = 2;
+        break;
+      case 11:
+        frontIndex = 1;
+        break;
+      case 12:
+        frontIndex = 0;
+        break;
+    }
+
+    if (
+      (0 <= index &&
+        index <= 5 &&
+        1 <= lastSeedingPlace &&
+        lastSeedingPlace <= 5) ||
+      (7 <= index &&
+        index <= 12 &&
+        8 <= lastSeedingPlace &&
+        lastSeedingPlace <= 12)
+    ) {
+      myHole = true;
+    }
+
+    //種まきの最後の場所の石の個数が1の時
+    if (
+      table[lastSeedingPlace] == 1 &&
+      myHole == true &&
+      table[frontIndex] != 0
+    ) {
+      document.getElementById("gameIntroduction").innerHTML = `
+      対面の石を奪いました
+      `;
+      addedStonesToStore = 1 + table[frontIndex];
+      await sleep(1500);
+      console.log("遅延");
+      // updateHtml();
+      table[storeIndex(index)] += addedStonesToStore;
+      table[lastSeedingPlace] = 0;
+      table[frontIndex] = 0;
+      // await sleep(3000);
+     
+      
+      updateHtml();
+      for (let n = 0; n < buttons.length; n++) {
+        buttons[n].disabled = true;
+      }
+      console.log(buttons);
+    }
+    
+    // return table;
+    
   }
-  return table;
+  myFunction2();
 }
 
 // // 試合終了処理（どちらかのプレーヤーのマスが全て空）
