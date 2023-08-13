@@ -48,9 +48,11 @@ function judgeWinner() {
         Draw.
       `;
     }
-    document.getElementById("drawTurn").innerHTML = ``;
     document.getElementById("gameIntroduction").innerHTML = ``;
+    document.getElementById("drawTurn").innerHTML = ``;
+    return true;
   }
+  return false;
 }
 
 //種まきを1度だけ行う関数
@@ -139,15 +141,10 @@ function buttonFunction() {
             updateHtml();
             const highlightedButton = document.querySelectorAll(".table .hole");
             highlightedButton[number - 1].classList.add("buttonHighLight");
-            document.getElementById("drawTurn").innerHTML = `
-          `;
+            document.getElementById("drawTurn").innerHTML = ``;
             for (let n = 0; n < buttons.length; n++) {
               buttons[n].disabled = true;
             }
-            // if (bool) {
-            //   document.getElementById("drawTurn").innerHTML = ``;
-            //   return;
-            // }
             await sleep(3000);
             for (let n = 0; n < buttons.length; n++) {
               buttons[n].disabled = false;
@@ -175,16 +172,14 @@ function buttonFunction() {
               robComStones(number);
               judgeWinner();
               updateHtml();
-              if (bool) {
-                document.getElementById("drawTurn").innerHTML = ``;
-                return;
-              }
               for (let n = 0; n < buttons.length; n++) {
                 buttons[n].disabled = false;
               }
-              document.getElementById("drawTurn").innerHTML = `
-            あなたのターンです
-            `;
+              if (judgeWinner() == false) {
+                document.getElementById("drawTurn").innerHTML = `
+              あなたのターンです
+              `;
+              }
               document.getElementById("gameIntroduction").innerHTML = ``;
             }
           }
