@@ -1,5 +1,5 @@
 //0~6は自分のコマとストア,以降は敵のコマとストア
-let table = [3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 3, 3, 0];
+let table = [0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0];
 
 function yourStones() {
   let yourStones = 0;
@@ -36,20 +36,23 @@ function judgeWinner() {
   tidyUp();
   if (yourStones() == 0 || comStones() == 0) {
     if (table[6] > table[13]) {
-      console.log("aaa");
       document.getElementById("judgementOfWinner").innerHTML = `
+        ${table[6]} - ${table[13]}<br>
         You win.
       `;
     } else if (table[6] < table[13]) {
-      console.log("b");
       document.getElementById("judgementOfWinner").innerHTML = `
+      ${table[6]} - ${table[13]}<br>
         CPU win.
       `;
     } else {
       document.getElementById("judgementOfWinner").innerHTML = `
+      ${table[6]} - ${table[13]}<br>
         Draw.
       `;
     }
+    document.getElementById("drawTurn").innerHTML = ``;
+    document.getElementById("gameIntroduction").innerHTML = ``;
   }
 }
 
@@ -93,101 +96,98 @@ function seeding(selectedIndexNumber) {
 // console.log(seeding(2).lastSeedingPlace);
 //プレイヤーがボタンを押した場所の処理を実行
 const holes = document.getElementById("holes");
-const highlightedButton = document.querySelectorAll(".table .hole");
 
 function buttonFunction() {
   let buttons = document.getElementsByClassName("btn");
   for (let j = 0; j < buttons.length; j++) {
-    buttons[j].addEventListener("click", function () {
-      for (let n = 0; n < buttons.length; n++) {
-        buttons[n].disabled = false;
-      }
-      document.getElementById("drawTurn").innerHTML = `
-      `;
-      document.getElementById("gameIntroduction").innerHTML = ``;
-      table = seeding(j).table;
-      robComStones(j);
-      // console.log("robComStones:" + robComStones(j));
-      judgeWinner();
-      updateHtml();
+    if (table[j] !== 0) {
+      buttons[j].addEventListener("click", function () {
+        for (let n = 0; n < buttons.length; n++) {
+          buttons[n].disabled = false;
+        }
+        document.getElementById("drawTurn").innerHTML = ``;
+        document.getElementById("gameIntroduction").innerHTML = ``;
+        table = seeding(j).table;
+        robComStones(j);
+        judgeWinner();
+        updateHtml();
+        const highlightedButton = document.querySelectorAll(".table .hole");
+        highlightedButton[j].classList.add("buttonHighLight");
 
-      const highlightedId = document.setAttribute(
-        "id",
-        "highlightedButton.hole[j]"
-      );
-      highlightedId.classList.add("buttonHighLight");
-      for (let n = 0; n < buttons.length; n++) {
-        buttons[n].disabled = true;
-      }
-
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-      async function myFunction() {
-        await sleep(3000);
-        if (canContinue(j) == true) {
-          document.getElementById("drawTurn").innerHTML = `
+        for (let n = 0; n < buttons.length; n++) {
+          buttons[n].disabled = true;
+        }
+        function sleep(ms) {
+          return new Promise((resolve) => setTimeout(resolve, ms));
+        }
+        async function myFunction() {
+          await sleep(3000);
+          if (canContinue(j) == true) {
+            document.getElementById("drawTurn").innerHTML = `
           あなたのターンです
           `;
-          document.getElementById("gameIntroduction").innerHTML = `
+            document.getElementById("gameIntroduction").innerHTML = `
           もう一度操作できます
           `;
-          judgeWinner();
-          updateHtml();
-        }
-        //連続操作条件が発生しないときにコンピュータの操作を発火させる
-        else if (canContinue(j) == false) {
-          document.getElementById("gameIntroduction").innerHTML = ``;
-          document.getElementById("drawTurn").innerHTML = `
+            judgeWinner();
+            updateHtml();
+          }
+          //連続操作条件が発生しないときにコンピュータの操作を発火させる
+          else if (canContinue(j) == false) {
+            document.getElementById("gameIntroduction").innerHTML = ``;
+            document.getElementById("drawTurn").innerHTML = `
           COMのターンです
           `;
-          await sleep(3000);
-          let number;
-          number = canSelectIndexByCom();
-          seeding(number);
-          robComStones(number);
-          judgeWinner();
-          updateHtml();
-          document.getElementById("drawTurn").innerHTML = `
-          `;
-          for (let n = 0; n < buttons.length; n++) {
-            buttons[n].disabled = true;
-          }
-          await sleep(3000);
-          for (let n = 0; n < buttons.length; n++) {
-            buttons[n].disabled = false;
-          }
-          document.getElementById("drawTurn").innerHTML = `
-          あなたのターンです
-          `;
-          while (canContinue(number) == true) {
-            for (let n = 0; n < buttons.length; n++) {
-              buttons[n].disabled = true;
-            }
-            document.getElementById("drawTurn").innerHTML = `
-            COMのターンです
-            `;
-            document.getElementById("gameIntroduction").innerHTML = `
-            コンピュータがもう一度操作できます
-            `;
             await sleep(3000);
+            let number;
             number = canSelectIndexByCom();
             seeding(number);
             robComStones(number);
             judgeWinner();
             updateHtml();
+            const highlightedButton = document.querySelectorAll(".table .hole");
+            highlightedButton[number - 1].classList.add("buttonHighLight");
+            document.getElementById("drawTurn").innerHTML = `
+          `;
+            for (let n = 0; n < buttons.length; n++) {
+              buttons[n].disabled = true;
+            }
+            await sleep(3000);
             for (let n = 0; n < buttons.length; n++) {
               buttons[n].disabled = false;
             }
             document.getElementById("drawTurn").innerHTML = `
+          あなたのターンです
+          `;
+            while (canContinue(number) == true) {
+              for (let n = 0; n < buttons.length; n++) {
+                buttons[n].disabled = true;
+              }
+              document.getElementById("drawTurn").innerHTML = `
+            COMのターンです
+            `;
+              document.getElementById("gameIntroduction").innerHTML = `
+            コンピュータがもう一度操作できます
+            `;
+              await sleep(3000);
+              number = canSelectIndexByCom();
+              seeding(number);
+              robComStones(number);
+              judgeWinner();
+              updateHtml();
+              for (let n = 0; n < buttons.length; n++) {
+                buttons[n].disabled = false;
+              }
+              document.getElementById("drawTurn").innerHTML = `
             あなたのターンです
             `;
-            document.getElementById("gameIntroduction").innerHTML = ``;
+              document.getElementById("gameIntroduction").innerHTML = ``;
+            }
           }
         }
-      }
-      myFunction();
-    });
+        myFunction();
+      });
+    }
   }
 }
 
@@ -270,7 +270,6 @@ function updateHtml() {
 
 //初期設定として呼び出し
 buttonFunction();
-
 //連続操作機能
 function storeIndex(playerIndex) {
   let storePlace;
