@@ -1,2 +1,2 @@
-# Mancala
-Recursionチーム開発
+https://team-dev-b.github.io/Mancala/
+上記リンクからプレイできます。
